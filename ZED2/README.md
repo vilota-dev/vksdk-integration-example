@@ -11,7 +11,7 @@ This sample shows how to get the camera pose in a world reference and output the
  - Build for [Linux/Jetson](https://www.stereolabs.com/docs/app-development/cpp/linux/)
  
 ## Install vk-system
- - Install vk-system binary, please contact vilota support for obtaining the deb file
+Install vk-system binary, please contact Vilota support for obtaining the deb file
 
 ## Install sophus and eigen
 ```

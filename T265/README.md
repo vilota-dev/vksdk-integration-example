@@ -19,7 +19,7 @@ make -j$(nproc)
 sudo make install
 ```
 ## Install vk-system
- - Install vk-system binary, please contact vilota support for obtaining the deb file
+Install vk-system binary, please contact Vilota support for obtaining the deb file
 
 ## Install sophus and eigen
 ```
