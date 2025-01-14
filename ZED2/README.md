@@ -1,6 +1,6 @@
 # ZED SDK
 
-This sample shows how to get the camera pose in a world reference and output the odometry to eCAL.
+This sample shows how to get the camera pose in a world reference and output the odometry to eCAL. Must have NVIDIA GPU.
 
 ## Getting Started
  - Get the latest [ZED SDK](https://www.stereolabs.com/developers/release/)

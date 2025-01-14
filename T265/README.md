@@ -1,6 +1,6 @@
 # Intel librealsense
 
-This sample shows how to get the camera pose in a world reference and output the odometry to eCAL.
+This sample shows how to get the camera pose in a world reference and output the odometry to eCAL. No need to have NVIDIA GPU.
 
 ## Getting Started
 Clone librealsense and checkout version 2.50.0 as this is the latest version which supports Intel T265.
