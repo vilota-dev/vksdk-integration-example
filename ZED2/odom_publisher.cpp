@@ -128,10 +128,11 @@ int main(int argc, char **argv) {
                 // std::cout << "\nOffset: " << t_ns_offset << std::endl;
                 // std::cout << "Monotonic Time: " << t_ns_mono << std::endl;
 
-                // Display the translation and timestamp
-                std::cout << std::setprecision(3) << std::fixed << "Camera Translation: {" << zed_translation << "}, Orientation: {" << zed_orientation
-                        << "}, timestamp: " << zed_pose.timestamp.getNanoseconds() << "ns" << std::endl;
-
+                if (odomSeq % 10 == 0) {
+                    // Display the translation and timestamp
+                    std::cout << std::setprecision(3) << std::fixed << "Camera Translation: {" << zed_translation << "}, Orientation: {" << zed_orientation
+                            << "}, timestamp: " << zed_pose.timestamp.getNanoseconds() << "ns" << std::endl;
+                }
                 // Status and statistics
                 // std::cout << status.tracking_fusion_status << std::endl; // Show which positional tracking fusion is used
                 // std::cout << status.odometry_status << std::endl; // Show current state of Visual-Inertial Odometry (VIO) tracking between the previous frame and the current frame

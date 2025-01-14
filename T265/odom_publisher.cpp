@@ -143,10 +143,12 @@ int main(int argc, char *argv[])
                 // Cast the frame to pose_frame and get its data
                 auto pose_data = f.as<rs2::pose_frame>().get_pose_data();
 
+                if (odomSeq % 100 == 0) {
                 // Print the x, y, z values of the translation, relative to initial position
                 std::cout << "\r" << std::string(60, ' ') << "\r"; // Clears the line
                 std::cout << "Device Position: " << std::setprecision(3) << std::fixed << pose_data.translation.x << " " <<
                     pose_data.translation.y << " " << pose_data.translation.z << " (meters)" << std::flush;
+                }
                 
                 // std::cout <<"Tracker confidence: " << pose_data.tracker_confidence << std::endl; // Tracking confidence 0:Failed 1:Low 2:Medium 3:High
                 
@@ -238,7 +240,7 @@ int main(int argc, char *argv[])
                 msg.setResetCounter(vio_failure_count);
 
                 odomReceiver->handle(odomTopic, vkc::Message(vkc::Shared<vkc::Odometry3d>(std::move(mmb))));
-                
+                odomSeq++;
             }
             pipe.stop();
             return EXIT_SUCCESS;
@@ -253,8 +255,6 @@ int main(int argc, char *argv[])
             std::cerr << e.what() << std::endl;
             return EXIT_FAILURE;
         }
-
-        odomSeq++;
     });
     
 
