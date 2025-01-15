@@ -1,5 +1,5 @@
-#include "vk_sdk/capnp/Shared.hpp"
-#include "vk_sdk/capnp/odometry3d.capnp.h"
+#include <vk_sdk/capnp/Shared.hpp>
+#include <vk_sdk/capnp/odometry3d.capnp.h>
 #include <iostream>
 #include <memory>
 #include <vk_sdk/Sdk.hpp>
@@ -13,10 +13,6 @@
 #include <iostream>
 #include <iomanip>
 #include "intel-utils.hpp"
-
-// using namespace std;
-// using namespace rs2;
-
 
 static std::atomic<int64_t> time_offset;
 
@@ -93,31 +89,50 @@ int main(int argc, char *argv[])
 
             // Add pose stream
             cfg.enable_stream(RS2_STREAM_POSE, RS2_FORMAT_6DOF);
+            
+            rs2::pipeline_profile pipe_profile = pipe.start(cfg);
+            pipe.stop();
 
-            rs2::context ctx;
+            auto sensor = pipe_profile.get_device().query_sensors().front();
 
-            auto device = ctx.query_devices()[0];
-            device.hardware_reset();
-
-            std::cout << "Device " << device.get_info(RS2_CAMERA_INFO_NAME) << " connected" << std::endl;
-
-            rs2::sensor sensor = device.query_sensors()[0];
+            // Disable pose jumping
             if (sensor.supports(rs2_option::RS2_OPTION_ENABLE_POSE_JUMPING)){
                 sensor.set_option(rs2_option::RS2_OPTION_ENABLE_POSE_JUMPING, 0.0f);
                 std::cout << "Pose Jumping is now disabled for " << sensor.get_info(RS2_CAMERA_INFO_NAME) << std::endl;
             }
-
             std::cout << "Enable Pose Jumping" << std::endl;
             // Get a human readable description of the option
             const char* description = sensor.get_option_description(rs2_option::RS2_OPTION_ENABLE_POSE_JUMPING);
             std::cout << "       Description   : " << description << std::endl;
-
             // Get the current value of the option
             float current_value = sensor.get_option(rs2_option::RS2_OPTION_ENABLE_POSE_JUMPING);
             std::cout << "       Current Value : " << current_value << std::endl;
 
-            // not available
-            // sensor.set_option(rs2_option::RS2_OPTION_GLOBAL_TIME_ENABLED, 0);
+            // Disable relocalization
+            if (sensor.supports(rs2_option::RS2_OPTION_ENABLE_RELOCALIZATION)){
+                sensor.set_option(rs2_option::RS2_OPTION_ENABLE_RELOCALIZATION, 0.0f);
+                std::cout << "Relocalization is now disabled for " << sensor.get_info(RS2_CAMERA_INFO_NAME) << std::endl;
+            }
+            std::cout << "Enable Relocalization" << std::endl;
+            // Get a human readable description of the option
+            description = sensor.get_option_description(rs2_option::RS2_OPTION_ENABLE_RELOCALIZATION);
+            std::cout << "       Description   : " << description << std::endl;
+            // Get the current value of the option
+            current_value = sensor.get_option(rs2_option::RS2_OPTION_ENABLE_RELOCALIZATION);
+            std::cout << "       Current Value : " << current_value << std::endl;
+
+            // Disable mapping
+            if (sensor.supports(rs2_option::RS2_OPTION_ENABLE_MAPPING)){
+                sensor.set_option(rs2_option::RS2_OPTION_ENABLE_MAPPING, 0.0f);
+                std::cout << "Mapping is now disabled for " << sensor.get_info(RS2_CAMERA_INFO_NAME) << std::endl;
+            }
+            std::cout << "Enable Mapping" << std::endl;
+            // Get a human readable description of the option
+            description = sensor.get_option_description(rs2_option::RS2_OPTION_ENABLE_MAPPING);
+            std::cout << "       Description   : " << description << std::endl;
+            // Get the current value of the option
+            current_value = sensor.get_option(rs2_option::RS2_OPTION_ENABLE_MAPPING);
+            std::cout << "       Current Value : " << current_value << std::endl;
 
             // Start pipeline with chosen configuration
             pipe.start(cfg);

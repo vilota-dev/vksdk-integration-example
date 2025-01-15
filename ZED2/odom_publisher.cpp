@@ -25,7 +25,6 @@ bool update_offset_to_realtime(size_t try_count) {
         auto mono_t0 = std::chrono::nanoseconds(mono_tp0.time_since_epoch()).count();
         auto real_t1 = std::chrono::nanoseconds(real_tp1.time_since_epoch()).count();
         auto mono_t2 = std::chrono::nanoseconds(mono_tp2.time_since_epoch()).count();
-        std::cout << real_t1 << std::endl;
 
         auto diff_a = real_t1 - mono_t0;
         auto diff_b = mono_t2 - real_t1;
@@ -128,10 +127,10 @@ int main(int argc, char **argv) {
                 // std::cout << "\nOffset: " << t_ns_offset << std::endl;
                 // std::cout << "Monotonic Time: " << t_ns_mono << std::endl;
 
-                if (odomSeq % 10 == 0) {
-                    // Display the translation and timestamp
-                    std::cout << std::setprecision(3) << std::fixed << "Camera Translation: {" << zed_translation << "}, Orientation: {" << zed_orientation
-                            << "}, timestamp: " << zed_pose.timestamp.getNanoseconds() << "ns" << std::endl;
+                if (odomSeq % 100 == 0) {
+                    // Display the translation every 100 frame
+                    std::cout << "\r" << std::string(60, ' ') << "\r"; // Clears the line
+                    std::cout << std::setprecision(3) << std::fixed << "Camera Translation: {" << zed_translation << "}" << std::flush;
                 }
                 // Status and statistics
                 // std::cout << status.tracking_fusion_status << std::endl; // Show which positional tracking fusion is used
@@ -144,10 +143,11 @@ int main(int argc, char **argv) {
                 // Convert the float[36] array to an Eigen 6x6 matrix
                 Eigen::Map<Eigen::Matrix<float, 6, 6>> cov_matrix(zed_pose.pose_covariance);
                 // Eigen::Map<Eigen::Matrix<float, 3, 3>> imu_cov_matrix(sensor_data.imu.pose_covariance);
+
                 // Compute the Frobenius norm (magnitude) of the covariance matrix
                 float covariance_norm = cov_matrix.norm();
 
-                float vision_failure_detection_metric = (100.0f - zed_pose.pose_confidence) / 100; // inverse map to [1,0], 1:Failed
+                float vision_failure_detection_metric = (100.0f - zed_pose.pose_confidence) / 100; // inverse map to [0,1], 1:Failed
                 bool turning_to_failure = false;
                 bool damped_turning_to_failure = false;
 
